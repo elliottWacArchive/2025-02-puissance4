@@ -1,0 +1,20 @@
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+    height: 60vw;
+    background-color: red;
+}
+
+.row {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: blue;
+}
+
+.cellule {
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+}
