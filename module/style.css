@@ -5,6 +5,12 @@ body {
     align-items: center;
 }
 
+.result-container, .result-container div {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
 .grid-container {
     display: flex;
     flex-direction: column;

@@ -14,7 +14,10 @@ class Puissance4 {
     init(sizeX, sizeY) {
         const percentX = 100 / sizeX;
         const percentY = 100 / sizeY;
-
+        const result = document.createElement('div');
+        result.className = 'result-container';
+        result.innerHTML = `<div class=${this.color1}>${this.color1}<div class='result'>0</div></div>-<div class=${this.color2}>${this.color2}<div class='result'>0</div></div>`;
+        document.body.appendChild(result);
         let data;
         let userSize;
         if (sizeX >= sizeY) {
@@ -52,6 +55,61 @@ class Puissance4 {
         }
     }
 
+    checkWin() {
+        const grid = [];
+        for (let y = 1; y <= this.sizeY; y++) {
+            let row = [];
+            for (let x = 0; x < this.sizeX; x++) {
+                let cell = document.getElementById(`y${y}`).querySelector(`#x${x}`);
+                if (cell.children.length > 0) {
+                    row.push(cell.children[0].style.backgroundColor);
+                } else {
+                    row.push(null);
+                }
+            }
+            grid.push(row);
+        }
+
+        const checkDirection = (dx, dy) => {
+            for (let y = 0; y < this.sizeY; y++) {
+                for (let x = 0; x < this.sizeX; x++) {
+                    let color = grid[y][x];
+                    if (color) {
+                        let win = true;
+                        for (let i = 1; i < 4; i++) {
+                            let nx = x + dx * i;
+                            let ny = y + dy * i;
+                            if (nx < 0 || ny < 0 || nx >= this.sizeX || ny >= this.sizeY || grid[ny][nx] !== color) {
+                                win = false;
+                                break;
+                            }
+                        }
+                        if (win) {
+                            document.querySelector(`.${color}`).querySelector('.result').innerHTML = parseInt(document.querySelector(`.${color}`).querySelector('.result').innerHTML) + 1;
+                            // alert(`${color} wins!`);
+                            const selector = document.querySelector('.selector-container');
+                            selector.style.height = 100 + '%';
+                            selector.innerHTML = `${color} wins! <button id="replay">Replay</button>`;
+                            document.getElementById('replay').addEventListener('click', () => {
+                                this.replay();
+                            });
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        };
+        console.log(grid);
+        return checkDirection(1, 0) || checkDirection(0, 1) || checkDirection(1, 1) || checkDirection(1, -1);
+    }
+
+    replay() {
+        document.querySelector('.grid-container').innerHTML = '';
+        this.makeGrid(this.sizeX, this.sizeY);
+        this.startGame();
+    }
+
     startGame() {
         document.querySelectorAll('.selector').forEach(item => {
             item.addEventListener('click', (e) => {
@@ -79,6 +137,9 @@ class Puissance4 {
                 div.style.borderRadius = "50%";
                 item.appendChild(div);
                 this.newPosition(div, 1, column);
+                setTimeout(() => {
+                    this.checkWin();
+                }, 25 * this.sizeY);
             });
         });
     }
