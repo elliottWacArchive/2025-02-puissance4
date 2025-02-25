@@ -5,8 +5,8 @@ class Puissance4 {
         this.color1 = color1;
         this.color2 = color2;
         this.turn = 1;
+        this.npiece = 0;
         this.userSize = this.init(this.sizeX, this.sizeY + 1);
-        console.log(this.userSize);
         this.makeGrid(this.sizeX, this.sizeY);
         this.startGame();
     }
@@ -16,7 +16,7 @@ class Puissance4 {
         const percentY = 100 / sizeY;
         const result = document.createElement('div');
         result.className = 'result-container';
-        result.innerHTML = `<div class=${this.color1}>${this.color1}<div class='result'>0</div></div>-<div class=${this.color2}>${this.color2}<div class='result'>0</div></div>`;
+        result.innerHTML = `<div class=${this.color1}>${this.color1}<div class='result'>0</div></div>-<div class=${this.color2}>${this.color2}<div class='result'>0</div><button id="undo">Undo</button></div>`;
         document.body.appendChild(result);
         let data;
         let userSize;
@@ -24,7 +24,7 @@ class Puissance4 {
             data = `.cellule { width: calc(${percentX}% - 2px); aspect-ratio: 1/1; }`;
             userSize = percentX;
         } else {
-            data = `.row { height: ${percentY}%; } .cellule { aspect-ratio: 1/1; }`;
+            data = `.row { height: ${percentY}%; } .cellule { height: 100%; aspect-ratio: 1/1; }`;
             userSize = percentY;
         }
         const style = document.createElement('style');
@@ -33,6 +33,14 @@ class Puissance4 {
         document.head.appendChild(style);
         const container = "<div class='grid-container'></div>";
         document.body.innerHTML += container;
+        document.getElementById("undo").addEventListener('click', () => {
+            const lastPiece = document.querySelector(`.piece.p${this.npiece}`);
+            if (lastPiece) {
+                lastPiece.remove();
+                this.npiece--;
+                this.turn = this.turn === 1 ? 2 : 1;
+            }
+        });
         return userSize;
     }
 
@@ -52,6 +60,26 @@ class Puissance4 {
                     row.innerHTML += `<div class="cellule" id="x${x}"></div>`;
                 }
             }
+        }
+    }
+
+    checkNull() {
+        let count = 0;
+        for (let y = 1; y <= this.sizeY; y++) {
+            for (let x = 0; x < this.sizeX; x++) {
+                let cell = document.getElementById(`y${y}`).querySelector(`#x${x}`);
+                if (cell.children.length > 0) {
+                    count++;
+                }
+            }
+        }
+        if (count == this.sizeX * this.sizeY) {
+            const selector = document.querySelector('.selector-container');
+            selector.style.height = 100 + '%';
+            selector.innerHTML = `<div class="win">Partie Nulle! <button id="replay">Replay</button></div>`;
+            document.getElementById('replay').addEventListener('click', () => {
+                this.replay();
+            });
         }
     }
 
@@ -86,21 +114,21 @@ class Puissance4 {
                         }
                         if (win) {
                             document.querySelector(`.${color}`).querySelector('.result').innerHTML = parseInt(document.querySelector(`.${color}`).querySelector('.result').innerHTML) + 1;
-                            // alert(`${color} wins!`);
                             const selector = document.querySelector('.selector-container');
                             selector.style.height = 100 + '%';
-                            selector.innerHTML = `${color} wins! <button id="replay">Replay</button>`;
+                            selector.innerHTML = `<div class="win">${color} a gagné! <button id="replay">Replay</button></div>`;
                             document.getElementById('replay').addEventListener('click', () => {
                                 this.replay();
                             });
                             return true;
+                        } else {
+                            this.checkNull();
                         }
                     }
                 }
             }
             return false;
         };
-        console.log(grid);
         return checkDirection(1, 0) || checkDirection(0, 1) || checkDirection(1, 1) || checkDirection(1, -1);
     }
 
@@ -108,6 +136,8 @@ class Puissance4 {
         document.querySelector('.grid-container').innerHTML = '';
         this.makeGrid(this.sizeX, this.sizeY);
         this.startGame();
+        this.turn = 1;
+        this.npiece = 0;
     }
 
     startGame() {
@@ -131,7 +161,8 @@ class Puissance4 {
                         this.turn = 1;
                     }
                 }
-                div.className = 'piece';
+                this.npiece++;
+                div.className = `piece p${this.npiece}`;
                 div.style.width = "100%";
                 div.style.height = "100%";
                 div.style.borderRadius = "50%";

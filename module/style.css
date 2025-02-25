@@ -1,4 +1,9 @@
 body {
+    background-color: #1f1f1f;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    color: #ccc;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -8,7 +13,20 @@ body {
 .result-container, .result-container div {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 1em;
+}
+
+.win {
+    width: 100%;
+    border-radius: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    color: #1f1f1f;
+    background-color: gold;
 }
 
 .grid-container {
@@ -16,27 +34,35 @@ body {
     flex-direction: column;
     width: 40vw;
     height: 40vw;
-    background-color: red;
 }
 
 .row {
     justify-content: center;
+    align-items: center;
     display: flex;
-    background-color: blue;
+    transition: all 0.5s ease;
 }
 
 .cellule {
     border: 1px solid black;
-}
-
-.selector-container {
-    background-color: green;
+    background-color: blue;
 }
 
 .selector {
+    background-color: green;
     background-image: url("img/arrow-sm-down-svgrepo-com.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .grid-container {
+        display: flex;
+        flex-direction: column;
+        width: 70vw;
+        height: 70vw;
+        background-color: red;
+    }
 }
