@@ -2,13 +2,56 @@ class Puissance4 {
     constructor(sizeX = 7, sizeY = 6, color1 = 'yellow', color2 = 'red') {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.color1 = color1;
-        this.color2 = color2;
+        this.colors(color1, color2);
         this.turn = 1;
         this.npiece = 0;
         this.userSize = this.init(this.sizeX, this.sizeY + 1);
         this.makeGrid(this.sizeX, this.sizeY);
         this.startGame();
+    }
+
+    colors(color1, color2) {
+        if (color1 === color2) {
+            throw new Error('Les couleurs des joueurs doivent être différentes');
+        }
+        switch (color1) {
+            case 'yellow':
+                this.color1 = 'yellow';
+                break;
+            case 'red':
+                this.color1 = 'red';
+                break;
+            case 'blue':
+                this.color1 = 'blue';
+                break;
+            case 'green':
+                this.color1 = 'green';
+                break;
+            case 'purple':
+                this.color1 = 'purple';
+                break;
+            default:
+                throw new Error('Couleur non valide');
+        }
+        switch (color2) {
+            case 'yellow':
+                this.color2 = 'yellow';
+                break;
+            case 'red':
+                this.color2 = 'red';
+                break;
+            case 'blue':
+                this.color2 = 'blue';
+                break;
+            case 'green':
+                this.color2 = 'green';
+                break;
+            case 'purple':
+                this.color2 = 'purple';
+                break;
+            default:
+                throw new Error('Couleur non valide');
+        }
     }
 
     init(sizeX, sizeY) {
